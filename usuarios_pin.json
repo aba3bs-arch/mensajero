@@ -1,0 +1,109 @@
+{
+  "pin_longitud": 4,
+  "usuarios": [
+    {
+      "id": "admin01",
+      "nombre": "Andrés",
+      "pin": "1504",
+      "puesto": "Admin 3B",
+      "admin": true,
+      "activo": true
+    },
+    {
+      "id": "emp02",
+      "nombre": "lizbeth Selene Fusion",
+      "pin": "2002",
+      "puesto": "Caja",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "emp03",
+      "nombre": "Misael",
+      "pin": "3003",
+      "puesto": "Tecnico",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "0da71656",
+      "nombre": "Dariana 3B2",
+      "puesto": "cajero",
+      "pin": "4004",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "26e1ee4b",
+      "nombre": "Manuel 3B5",
+      "puesto": "cajero",
+      "pin": "5005",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "a30251bc",
+      "nombre": "Mayra 3B5",
+      "puesto": "cajero",
+      "pin": "6006",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "cf663c38",
+      "nombre": "Janette 3B6",
+      "puesto": "Caja",
+      "pin": "7007",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "fd8b1c92",
+      "nombre": "Pahola 3B7",
+      "puesto": "Caja",
+      "pin": "8008",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "024fcc41",
+      "nombre": "Cinthia 3B7",
+      "puesto": "Caja",
+      "pin": "9009",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "79229bd2",
+      "nombre": "Laura 3B9",
+      "puesto": "Caja",
+      "pin": "1010",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "3b2fa805",
+      "nombre": "Yatzari 3B9",
+      "puesto": "Caja",
+      "pin": "2020",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "d4a828ec",
+      "nombre": "Sandra 3B10",
+      "puesto": "Caja",
+      "pin": "3030",
+      "admin": false,
+      "activo": true
+    },
+    {
+      "id": "4f234873",
+      "nombre": "angel 3B10",
+      "puesto": "Cajero",
+      "pin": "3726",
+      "admin": false,
+      "activo": true
+    }
+  ]
+}
