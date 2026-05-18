@@ -204,6 +204,88 @@ footer, footer * {
 
 #espaciador-top-fijo { width: 100%; display: block; }
 
+/* ── Modo conversación activa (una sola cabecera, chat a pantalla completa) ── */
+html.modo-chat-activo [data-testid="stAppViewContainer"] {
+    background: #C5B358 !important;
+}
+html.modo-chat-activo .nav-superior-fija,
+html.modo-chat-activo .btn-logout-fija {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+}
+html.modo-chat-activo [data-testid="stCaptionContainer"],
+html.modo-chat-activo .st-key-volver_conversaciones {
+    display: none !important;
+}
+html.modo-chat-activo .cabecera-3b .wa-header-icons {
+    display: none !important;
+}
+html.modo-chat-activo .st-key-volver_header {
+    position: fixed !important;
+    top: calc(8px + env(safe-area-inset-top, 0px)) !important;
+    left: 6px !important;
+    z-index: 1201 !important;
+    width: 48px !important;
+    max-width: 48px !important;
+}
+html.modo-chat-activo .st-key-volver_header .stButton > button {
+    background: transparent !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 26px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    width: 48px !important;
+}
+html.modo-chat-activo .cabecera-en-chat .wa-titles {
+    padding-left: 40px;
+}
+html.modo-chat-activo .cabecera-en-chat h2 {
+    font-size: 16px !important;
+    letter-spacing: 0.03em !important;
+}
+html.modo-chat-activo .block-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    max-width: 100% !important;
+}
+html.modo-chat-activo iframe[data-testid="stIFrame"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+html.modo-chat-activo div[data-testid="stForm"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    z-index: 1050 !important;
+    margin: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+}
+html.modo-chat-activo div:has(.zona-chat-marker) + div iframe,
+html.modo-chat-activo div:has(.zona-chat-marker) ~ div iframe {
+    min-height: 200px;
+}
+html.modo-chat-activo [data-testid="stFileUploader"] label {
+    font-size: 0 !important;
+}
+html.modo-chat-activo [data-testid="stFileUploader"] label::after {
+    content: '📷 Foto';
+    font-size: 12px;
+    color: #666;
+}
+
 /* ── Botones generales (app logueada) ── */
 body:has(.cabecera-3b) .stButton > button {
     background: #fff !important;
@@ -330,10 +412,18 @@ div[data-testid="stForm"] button[kind="primaryFormSubmit"] {
 
 .wa-lista-panel {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-    margin: 8px 0 12px;
+    margin: 0;
+}
+html:not(.modo-chat-activo) div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] {
+    background: #fff;
+    max-width: 440px;
+    margin: 0 auto;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    padding-bottom: 8px;
 }
 body:has(.cabecera-3b) iframe[data-testid="stIFrame"] {
     border-radius: 0 !important;
@@ -497,8 +587,8 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.pin-keypad-marker) .stButto
         padding-top: calc(12px + env(safe-area-inset-top, 0px)) !important;
     }
     .nav-superior-fija, .btn-logout-fija {
-        max-width: calc(100% - 20px) !important;
-        width: calc(100% - 20px) !important;
+        max-width: 100% !important;
+        width: 100% !important;
     }
     body:has(.cabecera-3b) .stButton > button {
         min-height: 50px !important;
@@ -530,20 +620,17 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.pin-keypad-marker) .stButto
     function esMovil() { return window.innerWidth <= 480; }
 
     function ajustarIframeChat() {
-        if (!esMovil()) return;
+        var enChat = document.documentElement.classList.contains('modo-chat-activo');
+        if (!enChat && !esMovil()) return;
         var esp = document.getElementById('espaciador-top-fijo');
         var espH = esp ? esp.offsetHeight : 0;
         var vh = window.innerHeight;
         var form = document.querySelector('div[data-testid="stForm"]');
-        var formH = form ? form.offsetHeight : 160;
-        var cap = document.querySelector('[data-testid="stCaptionContainer"]');
-        var capH = cap ? cap.offsetHeight : 20;
-        var objetivo = Math.max(240, vh - espH - formH - capH - 100);
+        var formH = form ? form.offsetHeight : (enChat ? 72 : 160);
+        var objetivo = Math.max(200, vh - espH - formH - (enChat ? 8 : 100));
         document.querySelectorAll('iframe[data-testid="stIFrame"]').forEach(function(fr) {
-            if (fr.offsetHeight >= 180) {
-                fr.style.height = objetivo + 'px';
-                fr.style.minHeight = objetivo + 'px';
-            }
+            fr.style.height = objetivo + 'px';
+            fr.style.minHeight = objetivo + 'px';
         });
     }
 
@@ -553,6 +640,11 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.pin-keypad-marker) .stButto
         if (!cab || !esp) return;
 
         var cabH = altura(cab);
+        if (document.documentElement.classList.contains('modo-chat-activo')) {
+            esp.style.height = (cabH + 6) + 'px';
+            ajustarIframeChat();
+            return;
+        }
         var radio = null;
         var radios = document.querySelectorAll('[data-testid="stRadio"]');
         for (var i = 0; i < radios.length; i++) {
@@ -634,16 +726,24 @@ def inyectar_estilos_app():
     st.markdown(CSS_APP, unsafe_allow_html=True)
 
 
-def render_cabecera(usuario, logo_html):
+def render_cabecera(usuario, logo_html, titulo_chat=None, subtitulo_chat=None):
     nombre = html_lib.escape(str(usuario.get("nombre", "")))
+    if titulo_chat:
+        titulo_h = html_lib.escape(str(titulo_chat))
+        linea2 = html_lib.escape(str(subtitulo_chat or ""))
+        clase_extra = " cabecera-en-chat"
+    else:
+        titulo_h = "3B MENSAJERÍA OFICIAL"
+        linea2 = nombre
+        clase_extra = ""
     st.markdown(
         f"""
-        <div class="cabecera-3b">
+        <div class="cabecera-3b{clase_extra}">
             <div class="wa-header-top">
                 <div class="wa-logo">{logo_html}</div>
                 <div class="wa-titles">
-                    <h2>3B MENSAJERÍA OFICIAL</h2>
-                    <div class="sesion">{nombre}</div>
+                    <h2>{titulo_h}</h2>
+                    <div class="sesion">{linea2}</div>
                 </div>
                 <div class="wa-header-icons" aria-hidden="true">
                     <span>⚙</span><span>⋮</span>

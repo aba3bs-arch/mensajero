@@ -257,9 +257,7 @@ def pantalla_admin(config):
             st.error("No hay PINs disponibles.")
 
 
-def _html_vista_chat(
-    html_mensajes, logo, logo_avatar, nombre, puesto, ribbon, titulo_chat, subtitulo_chat
-):
+def _html_vista_chat(html_mensajes, ribbon):
     return f"""
     <!DOCTYPE html>
     <html lang="es">
@@ -269,23 +267,10 @@ def _html_vista_chat(
     body {{
         font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         background: #C5B358;
-        height: 100dvh; min-height: 100vh;
+        height: 100%; min-height: 100%;
         display: flex; flex-direction: column; overflow: hidden;
         -webkit-text-size-adjust: 100%;
     }}
-    .chat-head {{
-        background: linear-gradient(180deg, #B80E28, #8B0A1E);
-        color: #fff; padding: 12px 14px; flex-shrink: 0;
-        display: flex; align-items: center; gap: 12px;
-    }}
-    .chat-head .avatar-sm {{
-        width: 44px; height: 44px; border-radius: 50%; background: #fff;
-        border: 2px solid rgba(255,255,255,0.5); overflow: hidden;
-        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }}
-    .chat-head .avatar-sm img {{ width: 100%; height: 100%; object-fit: cover; }}
-    .chat-head h4 {{ font-size: 16px; font-weight: 700; margin: 0; }}
-    .chat-head p {{ font-size: 12px; opacity: 0.9; margin: 2px 0 0; }}
     .ribbon {{
         background: #1E5AA8; color: #F5D000; text-align: center;
         font-weight: 800; font-size: 11px; padding: 6px 12px;
@@ -320,14 +305,7 @@ def _html_vista_chat(
     </style>
     </head>
     <body>
-    <header class="chat-head">
-        <div class="avatar-sm">{logo_avatar}</div>
-        <div>
-            <h4>{html.escape(titulo_chat)}</h4>
-            <p>{html.escape(subtitulo_chat)}</p>
-        </div>
-    </header>
-    <div class="ribbon{' priv' if 'privado' in ribbon.lower() else ''}">{html.escape(ribbon)}</div>
+    <div class="ribbon{' priv' if 'priv' in ribbon.lower() else ''}">{html.escape(ribbon)}</div>
     <div class="chat-box" id="box">{html_mensajes}</div>
     <script>const b=document.getElementById('box');b.scrollTop=b.scrollHeight;</script>
     </body>
@@ -336,7 +314,7 @@ def _html_vista_chat(
 
 
 @st.fragment(run_every=datetime.timedelta(seconds=CHAT_AUTO_REFRESH_SEC))
-def _zona_mensajes_auto(nombre, puesto, dest_privado, es_privado, titulo_chat, subtitulo_chat, ribbon):
+def _zona_mensajes_auto(nombre, dest_privado, es_privado, ribbon):
     html_mensajes = construir_html_chat(
         SUPABASE_URL,
         HEADERS,
@@ -345,17 +323,9 @@ def _zona_mensajes_auto(nombre, puesto, dest_privado, es_privado, titulo_chat, s
         etiqueta_privado=es_privado,
         normalizar_nombre=normalizar_nombre,
     )
-    codigo = _html_vista_chat(
-        html_mensajes,
-        cargar_logo(),
-        cargar_logo("36px"),
-        nombre,
-        puesto,
-        ribbon,
-        titulo_chat,
-        subtitulo_chat,
-    )
-    st.components.v1.html(codigo, height=560, scrolling=False)
+    codigo = _html_vista_chat(html_mensajes, ribbon)
+    st.markdown('<div class="zona-chat-marker" style="display:none"></div>', unsafe_allow_html=True)
+    st.components.v1.html(codigo, height=480, scrolling=False)
 
 
 def pantalla_chat(usuario, config):
@@ -384,18 +354,13 @@ def pantalla_chat(usuario, config):
     if es_privado and not supabase_soporta_privado(SUPABASE_URL, HEADERS):
         aviso_configurar_supabase_privado()
 
-    if st.button("← Conversaciones", use_container_width=True, key="volver_conversaciones"):
-        st.session_state.chat_destino_id = None
-        st.rerun()
-
     if st.session_state.get("_supabase_fotos_ok") is not True:
         st.session_state.pop("_supabase_fotos_ok", None)
     fotos_ok = supabase_soporta_fotos(SUPABASE_URL, HEADERS)
     if not fotos_ok:
         aviso_configurar_fotos()
 
-    st.caption(f"Actualización automática cada {CHAT_AUTO_REFRESH_SEC} s · Fotos {FOTO_EXPIRA_HORAS} h")
-    _zona_mensajes_auto(nombre, puesto, dest_privado, es_privado, titulo_chat, subtitulo_chat, ribbon)
+    _zona_mensajes_auto(nombre, dest_privado, es_privado, ribbon)
 
     with st.form("envio", clear_on_submit=True):
         foto = None
@@ -600,9 +565,39 @@ st.markdown(
     '<script>document.documentElement.classList.remove("pin-page");</script>',
     unsafe_allow_html=True,
 )
-render_cabecera_fija(usuario, cargar_logo("40px"))
-barra_navegacion(usuario)
-espaciador_contenido()
+
+en_conversacion = (
+    st.session_state.get("vista", "chat") == "chat"
+    and st.session_state.get("chat_destino_id") is not None
+)
+
+if en_conversacion:
+    _, titulo_conv, subtitulo_conv, _ = resolver_chat_destino(
+        config, st.session_state.chat_destino_id
+    )
+    st.markdown(
+        '<script>document.documentElement.classList.add("modo-chat-activo");</script>',
+        unsafe_allow_html=True,
+    )
+    render_cabecera_fija(
+        usuario, cargar_logo("36px"), titulo_chat=titulo_conv, subtitulo_chat=subtitulo_conv
+    )
+    if st.button("←", key="volver_header", help="Volver a chats"):
+        st.session_state.chat_destino_id = None
+        st.markdown(
+            '<script>document.documentElement.classList.remove("modo-chat-activo");</script>',
+            unsafe_allow_html=True,
+        )
+        st.rerun()
+    espaciador_contenido()
+else:
+    st.markdown(
+        '<script>document.documentElement.classList.remove("modo-chat-activo");</script>',
+        unsafe_allow_html=True,
+    )
+    render_cabecera_fija(usuario, cargar_logo("40px"))
+    barra_navegacion(usuario)
+    espaciador_contenido()
 
 if st.session_state.vista == "admin" and es_admin(usuario):
     pantalla_admin(config)

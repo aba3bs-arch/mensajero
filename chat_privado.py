@@ -376,7 +376,12 @@ def pantalla_lista_chats(
     if supabase_url and headers and not supabase_soporta_privado(supabase_url, headers):
         aviso_configurar_supabase_privado()
 
-    if st.button("Chat general de la tienda\nTodos los empleados", use_container_width=True, type="primary", key="abrir_general"):
+    if st.button(
+        "Chat general de la tienda\nTodos los empleados · Toca para abrir",
+        use_container_width=True,
+        type="primary",
+        key="abrir_general",
+    ):
         st.session_state.chat_destino_id = CHAT_GENERAL_ID
         st.rerun()
 
