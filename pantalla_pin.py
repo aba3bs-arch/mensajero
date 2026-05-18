@@ -129,16 +129,55 @@ html.pin-page [data-testid="stAlert"] {
     max-width: 400px;
     margin: 0 auto 8px !important;
 }
-html.pin-page footer,
-html.pin-page [data-testid="stToolbar"],
-html.pin-page .stAppDeployButton,
-html.pin-page [data-testid="stDecoration"] {
+
+/* Sin menú ni marca Streamlit (también en Cloud) */
+#MainMenu, footer, header,
+[data-testid="stHeader"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"],
+[data-testid="stBottom"],
+[data-testid="stBottomBlockContainer"],
+.stAppDeployButton,
+.stDeployButton,
+.viewerBadge_container__,
+div[class*="viewerBadge"],
+a[href*="streamlit.io"][target="_blank"] {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
+footer, footer * { display: none !important; }
 </style>
-<script>document.documentElement.classList.add('pin-page');</script>
+<script>
+document.documentElement.classList.add('pin-page');
+(function () {
+    function ocultarMarcaStreamlit() {
+        var rx = /hosted with streamlit|made with streamlit/i;
+        document.querySelectorAll('a, button, p, span, small, footer').forEach(function (el) {
+            var txt = (el.textContent || '').trim();
+            if (!txt || txt.length > 120 || !rx.test(txt)) return;
+            var n = el;
+            for (var i = 0; i < 8 && n; i++) {
+                n.style.setProperty('display', 'none', 'important');
+                n.style.setProperty('visibility', 'hidden', 'important');
+                n.style.setProperty('height', '0', 'important');
+                n.style.setProperty('opacity', '0', 'important');
+                n = n.parentElement;
+            }
+        });
+    }
+    ocultarMarcaStreamlit();
+    if (window.MutationObserver) {
+        new MutationObserver(ocultarMarcaStreamlit).observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    }
+})();
+</script>
 """
 
 
