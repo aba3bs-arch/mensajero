@@ -13,7 +13,9 @@ html, body {
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
 }
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(165deg, #f8f6f0 0%, #ebe8dc 45%, #e2dcc8 100%) !important;
+    background:
+        linear-gradient(180deg, rgba(255, 248, 235, 0.88) 0%, rgba(255, 245, 220, 0.92) 100%),
+        url('/static/bg_tienda_3b.png') center center / cover no-repeat fixed !important;
 }
 #MainMenu, footer, header,
 [data-testid="stHeader"],
@@ -50,7 +52,7 @@ footer, footer * {
     padding-bottom: 2.5rem !important;
 }
 
-/* ── Cabecera ── */
+/* ── Cabecera estilo WhatsApp / 3B ── */
 .cabecera-3b {
     position: fixed !important;
     top: 0 !important;
@@ -60,88 +62,113 @@ footer, footer * {
     max-width: 440px !important;
     z-index: 1100 !important;
     margin: 0 !important;
-    background: linear-gradient(135deg, #C8102E 0%, #9B0C24 100%);
+    background: linear-gradient(180deg, #B80E28 0%, #8B0A1E 100%) !important;
     color: #fff;
-    padding: 14px 16px 12px;
-    border-radius: 0 0 18px 18px;
-    box-shadow: 0 6px 24px rgba(155, 12, 36, 0.35);
+    padding: 10px 14px 8px;
+    border-radius: 0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
     box-sizing: border-box;
 }
-.cabecera-3b .fila {
+.cabecera-3b .wa-header-top {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
+.cabecera-3b .wa-logo {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #F5D000;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.cabecera-3b .wa-logo img, .cabecera-3b .wa-logo svg {
+    max-height: 36px;
+    width: auto;
+}
+.cabecera-3b .wa-titles { flex: 1; min-width: 0; }
 .cabecera-3b h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 800;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em;
     line-height: 1.2;
+    text-transform: uppercase;
 }
 .cabecera-3b .sesion {
-    font-size: 12px;
-    opacity: 0.92;
-    margin-top: 3px;
+    font-size: 11px;
+    opacity: 0.9;
+    margin-top: 2px;
     font-weight: 500;
 }
+.cabecera-3b .wa-header-icons {
+    display: flex;
+    gap: 14px;
+    font-size: 18px;
+    opacity: 0.95;
+    flex-shrink: 0;
+}
 .cabecera-3b .badge-puesto {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    margin-top: 4px;
+    display: none;
 }
 
-/* ── Navegación (pestañas) ── */
+/* ── Pestañas CHATS / PERSONAL (barra roja) ── */
 .nav-superior-fija {
     position: fixed !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: calc(100% - 24px) !important;
-    max-width: 416px !important;
+    width: 100% !important;
+    max-width: 440px !important;
     z-index: 1090 !important;
-    background: #fff !important;
-    padding: 10px 12px !important;
+    background: linear-gradient(180deg, #8B0A1E 0%, #7A0918 100%) !important;
+    padding: 0 8px 6px !important;
     margin: 0 !important;
-    border: 1px solid rgba(0,0,0,0.06) !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+    border: none !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15) !important;
     box-sizing: border-box !important;
-    border-radius: 14px !important;
+    border-radius: 0 !important;
 }
 .nav-superior-fija div[data-testid="stRadio"] > div {
     display: flex !important;
     justify-content: stretch !important;
-    gap: 8px !important;
-    background: #f0ede4 !important;
-    border-radius: 12px !important;
-    padding: 4px !important;
+    gap: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 .nav-superior-fija div[data-testid="stRadio"] label {
     flex: 1 !important;
-    border-radius: 10px !important;
+    border-radius: 0 !important;
     width: auto !important;
-    height: 42px !important;
-    min-height: 42px !important;
+    height: 40px !important;
+    min-height: 40px !important;
     min-width: 0 !important;
-    padding: 0 12px !important;
+    padding: 0 8px !important;
     margin: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: #555 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    color: rgba(255,255,255,0.65) !important;
     background: transparent !important;
     border: none !important;
+    border-bottom: 3px solid transparent !important;
+    text-transform: uppercase !important;
     transition: all 0.15s ease !important;
 }
 .nav-superior-fija div[data-testid="stRadio"] label[data-checked="true"],
 .nav-superior-fija div[data-testid="stRadio"] label:has(input:checked) {
-    background: #fff !important;
-    color: #C8102E !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    background: transparent !important;
+    color: #fff !important;
+    border-bottom-color: #F5D000 !important;
+    box-shadow: none !important;
 }
 .nav-superior-fija div[data-testid="stRadio"] label > div:first-child {
     display: none !important;
@@ -151,27 +178,28 @@ footer, footer * {
     position: fixed !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: calc(100% - 24px) !important;
-    max-width: 416px !important;
+    width: 100% !important;
+    max-width: 440px !important;
     z-index: 1089 !important;
-    background: transparent !important;
-    padding: 4px 0 8px !important;
+    background: rgba(139, 10, 30, 0.95) !important;
+    padding: 4px 12px 8px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
 }
 .btn-logout-fija .stButton > button {
     width: 100% !important;
-    background: transparent !important;
-    color: #666 !important;
-    border: 1px dashed #ccc !important;
-    min-height: 38px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
+    background: rgba(255,255,255,0.12) !important;
+    color: rgba(255,255,255,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    min-height: 36px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
 }
 .btn-logout-fija .stButton > button:hover {
-    border-color: #C8102E !important;
-    color: #C8102E !important;
-    background: #fff5f5 !important;
+    border-color: #F5D000 !important;
+    color: #fff !important;
+    background: rgba(255,255,255,0.2) !important;
 }
 
 #espaciador-top-fijo { width: 100%; display: block; }
@@ -204,17 +232,21 @@ body:has(.cabecera-3b) .stButton > button[kind="primary"]:hover {
 
 /* ── Lista de conversaciones ── */
 .lista-chats-titulo {
-    font-size: 22px;
-    font-weight: 800;
-    color: #1a1a1a;
-    margin: 8px 0 4px;
-    letter-spacing: -0.02em;
+    font-size: 14px;
+    font-weight: 700;
+    color: #8B0A1E;
+    margin: 0;
+    padding: 12px 14px 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 .lista-chats-sub {
-    font-size: 13px;
+    font-size: 12px;
     color: #666;
-    margin-bottom: 16px;
-    line-height: 1.45;
+    margin: 0;
+    padding: 0 14px 10px;
+    line-height: 1.4;
+    border-bottom: 1px solid #eee;
 }
 div[data-testid="stVerticalBlock"]:has(.lista-chats-marker) h3 {
     display: none !important;
@@ -225,39 +257,97 @@ div[data-testid="stVerticalBlock"]:has(.lista-chats-marker) ~ div .stButton > bu
     padding-left: 16px !important;
 }
 div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button {
+    text-align: left !important;
     justify-content: flex-start !important;
+    padding: 14px 14px 14px 72px !important;
+    min-height: 68px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #ece5d8 !important;
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    position: relative !important;
+    white-space: pre-line !important;
+}
+div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button::before {
+    content: '3B';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #F5D000, #e6c200);
+    border: 2px solid #C8102E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    color: #111;
+}
+div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button[kind="primary"] {
+    background: #fff8e8 !important;
 }
 
 /* ── Formulario envío chat ── */
 div[data-testid="stForm"] {
-    background: #fff;
-    border-radius: 16px;
-    padding: 12px 14px !important;
-    border: 1px solid rgba(0,0,0,0.08);
-    margin-top: 12px;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+    background: #fff !important;
+    border-radius: 28px !important;
+    padding: 8px 10px !important;
+    border: 1px solid #ddd !important;
+    margin-top: 8px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.1) !important;
 }
 div[data-testid="stForm"] input,
 div[data-testid="stForm"] textarea {
-    border-radius: 12px !important;
-    border: 1px solid #e0ddd4 !important;
+    border-radius: 20px !important;
+    border: none !important;
+    background: #f5f5f5 !important;
     font-size: 15px !important;
+    padding: 12px 14px !important;
 }
 div[data-testid="stForm"] [data-testid="stFileUploader"] {
     margin-bottom: 8px;
 }
 div[data-testid="stForm"] button[kind="primaryFormSubmit"] {
-    background: linear-gradient(135deg, #1E5AA8, #144f94) !important;
+    background: #1E5AA8 !important;
     color: #fff !important;
-    border-radius: 12px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
+    border-radius: 50% !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    width: 52px !important;
+    height: 52px !important;
     border: none !important;
-    font-size: 18px !important;
-    box-shadow: 0 4px 12px rgba(30,90,168,0.35) !important;
+    font-size: 20px !important;
+    box-shadow: 0 4px 12px rgba(30,90,168,0.4) !important;
+    padding: 0 !important;
 }
 
+.wa-lista-panel {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    margin: 8px 0 12px;
+}
+body:has(.cabecera-3b) iframe[data-testid="stIFrame"] {
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
 /* ── Admin ── */
+div:has(.admin-panel-marker) {
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-top: 8px;
+}
 div:has(.admin-panel-marker) [data-testid="stExpander"] {
     background: #fff;
     border-radius: 12px;
@@ -546,16 +636,17 @@ def inyectar_estilos_app():
 
 def render_cabecera(usuario, logo_html):
     nombre = html_lib.escape(str(usuario.get("nombre", "")))
-    puesto = html_lib.escape(str(usuario.get("puesto", "Tienda")))
     st.markdown(
         f"""
         <div class="cabecera-3b">
-            <div class="fila">
-                {logo_html}
-                <div>
-                    <h2>3B OFFICIAL</h2>
+            <div class="wa-header-top">
+                <div class="wa-logo">{logo_html}</div>
+                <div class="wa-titles">
+                    <h2>3B MENSAJERÍA OFICIAL</h2>
                     <div class="sesion">{nombre}</div>
-                    <span class="badge-puesto">{puesto}</span>
+                </div>
+                <div class="wa-header-icons" aria-hidden="true">
+                    <span>⚙</span><span>⋮</span>
                 </div>
             </div>
         </div>

@@ -249,7 +249,9 @@ def construir_mensajes_html(
                 <div class="time">{hora} <span style="color:#7ec8ff">✓✓</span></div>
             </div>"""
         else:
-            prefijo = "" if etiqueta_privado else f"<strong>{remitente}:</strong><br>"
+            prefijo = ""
+            if not etiqueta_privado:
+                prefijo = f'<div class="sender">{remitente}</div>'
             bloques += f"""
             <div class="msg received">{prefijo}{cuerpo}
                 <div class="time">{hora}</div>
@@ -360,17 +362,24 @@ def resolver_chat_destino(config, chat_destino_id):
 def pantalla_lista_chats(
     usuario, config, usuarios_activos_fn, normalizar_nombre, supabase_url=None, headers=None
 ):
-    st.markdown("### 💬 Conversaciones")
-    st.caption("Elige con quién hablar. Los chats 🔒 son privados (solo ustedes dos).")
+    st.markdown(
+        """
+        <span class="lista-chats-marker" style="display:none" aria-hidden="true"></span>
+        <div class="wa-lista-panel">
+        <div class="lista-chats-titulo">Chats</div>
+        <div class="lista-chats-sub">Chat general o mensajes privados con un compañero.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     if supabase_url and headers and not supabase_soporta_privado(supabase_url, headers):
         aviso_configurar_supabase_privado()
 
-    if st.button("📢  Chat general — toda la tienda", use_container_width=True, type="primary", key="abrir_general"):
+    if st.button("Chat general de la tienda\nTodos los empleados", use_container_width=True, type="primary", key="abrir_general"):
         st.session_state.chat_destino_id = CHAT_GENERAL_ID
         st.rerun()
 
-    st.markdown("**Mensajes privados**")
     otros = sorted(
         [u for u in usuarios_activos_fn(config["usuarios"]) if u["id"] != usuario["id"]],
         key=lambda x: normalizar_nombre(x["nombre"]),
@@ -381,9 +390,12 @@ def pantalla_lista_chats(
         return
 
     for u in otros:
-        etiqueta = f"🔒  {u['nombre']}"
-        if u.get("puesto"):
-            etiqueta += f"  ·  {u['puesto']}"
+        puesto = u.get("puesto", "")
+        etiqueta = f"{u['nombre']}"
+        if puesto:
+            etiqueta += f"\n{puesto} · privado"
+        else:
+            etiqueta += "\nMensaje privado"
         if st.button(etiqueta, key=f"abrir_chat_{u['id']}", use_container_width=True):
             st.session_state.chat_destino_id = u["id"]
             st.rerun()

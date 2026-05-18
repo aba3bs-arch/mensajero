@@ -5,7 +5,9 @@ import streamlit as st
 PIN_CSS = """
 <style>
 html.pin-page [data-testid="stAppViewContainer"] {
-    background: #b0b0b0 !important;
+    background:
+        linear-gradient(180deg, rgba(255, 248, 235, 0.9) 0%, rgba(255, 245, 220, 0.92) 100%),
+        url('/static/bg_tienda_3b.png') center center / cover no-repeat fixed !important;
 }
 html.pin-page .block-container {
     max-width: 440px !important;
@@ -15,20 +17,27 @@ html.pin-page .block-container {
 .pin-brand {
     text-align: center;
     font-family: 'Segoe UI', system-ui, sans-serif;
-    margin-bottom: 10px;
-    color: #222;
+    margin: 0 auto 14px;
+    max-width: 400px;
+    background: linear-gradient(180deg, #B80E28, #8B0A1E);
+    color: #fff;
+    padding: 20px 16px 16px;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 .pin-brand h1 {
-    margin: 8px 0 0;
-    font-size: 22px;
+    margin: 10px 0 0;
+    font-size: 18px;
     font-weight: 800;
-    color: #C8102E;
+    color: #fff;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 .pin-brand p {
-    margin: 4px 0 0;
+    margin: 6px 0 0;
     font-size: 12px;
-    color: #444;
-    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
 }
 .pin-lcd-wrap {
     background: linear-gradient(180deg, #1a2e1a, #0a140a);
@@ -207,7 +216,7 @@ def render_pantalla_pin(config, cargar_logo, buscar_usuario_por_pin):
         f"""
         <div class="pin-brand">
             <div style="display:block">{logo}</div>
-            <h1>3B OFFICIAL</h1>
+            <h1>3B MENSAJERÍA OFICIAL</h1>
             <p>ABARROTES LAS 3B · ACCESO EMPLEADOS</p>
         </div>
         {_html_lcd(pin_longitud, st.session_state.pin_buffer)}

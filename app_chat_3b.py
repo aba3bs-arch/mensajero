@@ -127,6 +127,7 @@ def pantalla_admin(config):
     pin_longitud = config["pin_longitud"]
     usuarios = config["usuarios"]
 
+    st.markdown('<span class="admin-panel-marker" style="display:none" aria-hidden="true"></span>', unsafe_allow_html=True)
     st.markdown("### 👥 Gestión de personal")
     st.caption(
         "Alta, baja y cambio de PIN sin editar archivos. "
@@ -266,59 +267,67 @@ def _html_vista_chat(
     <style>
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
-        font-family: 'Segoe UI', sans-serif; background: #C4B82E;
-        height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background: #C5B358;
+        height: 100dvh; min-height: 100vh;
+        display: flex; flex-direction: column; overflow: hidden;
+        -webkit-text-size-adjust: 100%;
     }}
-    .header {{ background: #C8102E; color: #fff; flex-shrink: 0; }}
-    .header-top {{ display: flex; align-items: center; padding: 10px 12px 6px; gap: 8px; }}
-    .header-top h1 {{ flex: 1; font-size: 15px; font-weight: 800; }}
-    .tabs-row {{ display: flex; align-items: center; padding: 0 8px 0 12px; border-bottom: 3px solid #fff; }}
-    .tabs {{ flex: 1; display: flex; justify-content: space-around; padding: 10px 0 8px; }}
-    .tabs span {{ font-weight: 700; font-size: 11px; opacity: 0.65; }}
-    .tabs span.active {{ opacity: 1; border-bottom: 3px solid #fff; padding-bottom: 4px; margin-bottom: -3px; }}
-    .ribbon {{ margin: 8px 14px; background: #1E5AA8; color: #fff; text-align: center;
-        font-weight: 800; font-size: 12px; padding: 6px; border-radius: 4px; }}
-    .session-bar {{
-        background: #9B0C24; color: #fff; text-align: center; font-size: 11px;
-        padding: 5px 10px; font-weight: 600;
+    .chat-head {{
+        background: linear-gradient(180deg, #B80E28, #8B0A1E);
+        color: #fff; padding: 12px 14px; flex-shrink: 0;
+        display: flex; align-items: center; gap: 12px;
     }}
-    .contact {{
-        background: #E8DC6B; padding: 10px 14px; display: flex; align-items: center; gap: 12px;
-        flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.08);
+    .chat-head .avatar-sm {{
+        width: 44px; height: 44px; border-radius: 50%; background: #fff;
+        border: 2px solid rgba(255,255,255,0.5); overflow: hidden;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }}
-    .avatar-sm {{
-        width: 40px; height: 40px; border-radius: 50%; background: #fff;
-        border: 2px solid #C8102E; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    .chat-head .avatar-sm img {{ width: 100%; height: 100%; object-fit: cover; }}
+    .chat-head h4 {{ font-size: 16px; font-weight: 700; margin: 0; }}
+    .chat-head p {{ font-size: 12px; opacity: 0.9; margin: 2px 0 0; }}
+    .ribbon {{
+        background: #1E5AA8; color: #F5D000; text-align: center;
+        font-weight: 800; font-size: 11px; padding: 6px 12px;
+        letter-spacing: 0.12em;
     }}
-    .avatar-sm img {{ width: 100%; height: 100%; object-fit: cover; }}
+    .ribbon.priv {{ background: #6a1b9a; color: #fff; }}
     .chat-box {{
-        flex: 1; overflow-y: auto; padding: 14px 12px;
-        display: flex; flex-direction: column; gap: 10px; background: #C4B82E;
+        flex: 1; overflow-y: auto; padding: 16px 12px;
+        display: flex; flex-direction: column; gap: 8px;
+        background: #C5B358;
+        background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(0,0,0,0.06) 0%, transparent 45%);
     }}
-    .msg {{ max-width: 82%; padding: 9px 12px 6px; font-size: 14px; line-height: 1.35;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1); }}
-    .received {{ background: #E8DC6B; color: #111; border-radius: 14px 14px 14px 2px; align-self: flex-start; }}
-    .sent {{ background: #C8102E; color: #fff; border-radius: 14px 14px 2px 14px; align-self: flex-end; }}
-    .time {{ font-size: 10px; text-align: right; margin-top: 4px; opacity: 0.75; }}
+    .msg {{
+        max-width: 85%; padding: 10px 14px 8px; font-size: 14px; line-height: 1.45;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }}
+    .msg .sender {{ font-size: 11px; font-weight: 700; color: #2E7D32; margin-bottom: 4px; }}
+    .received {{
+        background: #FFF9C4; color: #1B5E20;
+        border-radius: 16px 16px 16px 4px; align-self: flex-start;
+        border: 1px solid rgba(0,0,0,0.06);
+    }}
+    .sent {{
+        background: linear-gradient(135deg, #E53935, #C8102E);
+        color: #fff; border-radius: 16px 16px 4px 16px; align-self: flex-end;
+    }}
+    .sent .sender {{ display: none; }}
+    .time {{ font-size: 10px; text-align: right; margin-top: 6px; opacity: 0.7; }}
+    .sent .time {{ color: rgba(255,255,255,0.85); }}
+    .msg img {{ border-radius: 10px; max-width: 100%; }}
     </style>
     </head>
     <body>
-    <header class="header">
-        <div class="header-top">{logo}<h1>3B OFFICIAL</h1></div>
-        <div class="tabs-row">
-            <span style="padding-right:8px">📷</span>
-            <div class="tabs"><span class="active">CHATS</span><span>STATUS</span><span>SETTINGS</span></div>
-        </div>
-    </header>
-    <div class="session-bar">🔒 Sesión: {nombre} · {puesto}</div>
-    <div class="ribbon">{html.escape(ribbon)}</div>
-    <div class="contact">
+    <header class="chat-head">
         <div class="avatar-sm">{logo_avatar}</div>
         <div>
-            <h4 style="font-size:15px;font-weight:700">{html.escape(titulo_chat)}</h4>
-            <p style="font-size:12px;color:#555">{html.escape(subtitulo_chat)}</p>
+            <h4>{html.escape(titulo_chat)}</h4>
+            <p>{html.escape(subtitulo_chat)}</p>
         </div>
-    </div>
+    </header>
+    <div class="ribbon{' priv' if 'privado' in ribbon.lower() else ''}">{html.escape(ribbon)}</div>
     <div class="chat-box" id="box">{html_mensajes}</div>
     <script>const b=document.getElementById('box');b.scrollTop=b.scrollHeight;</script>
     </body>
@@ -346,7 +355,7 @@ def _zona_mensajes_auto(nombre, puesto, dest_privado, es_privado, titulo_chat, s
         titulo_chat,
         subtitulo_chat,
     )
-    st.components.v1.html(codigo, height=480, scrolling=False)
+    st.components.v1.html(codigo, height=560, scrolling=False)
 
 
 def pantalla_chat(usuario, config):
@@ -370,12 +379,12 @@ def pantalla_chat(usuario, config):
 
     nombre = usuario["nombre"]
     puesto = usuario.get("puesto", "Tienda")
-    ribbon = "🔒 Chat privado" if es_privado else "📢 Chat general — toda la tienda"
+    ribbon = "CHAT PRIVADO" if es_privado else "24 HRS · CHAT GENERAL"
 
     if es_privado and not supabase_soporta_privado(SUPABASE_URL, HEADERS):
         aviso_configurar_supabase_privado()
 
-    if st.button("← Volver a conversaciones", use_container_width=True, key="volver_conversaciones"):
+    if st.button("← Conversaciones", use_container_width=True, key="volver_conversaciones"):
         st.session_state.chat_destino_id = None
         st.rerun()
 
@@ -385,10 +394,7 @@ def pantalla_chat(usuario, config):
     if not fotos_ok:
         aviso_configurar_fotos()
 
-    st.caption(
-        f"Se actualiza solo cada {CHAT_AUTO_REFRESH_SEC} s. "
-        f"Las fotos duran {FOTO_EXPIRA_HORAS} h."
-    )
+    st.caption(f"Actualización automática cada {CHAT_AUTO_REFRESH_SEC} s · Fotos {FOTO_EXPIRA_HORAS} h")
     _zona_mensajes_auto(nombre, puesto, dest_privado, es_privado, titulo_chat, subtitulo_chat, ribbon)
 
     with st.form("envio", clear_on_submit=True):
@@ -402,9 +408,9 @@ def pantalla_chat(usuario, config):
             )
         col_in, col_btn = st.columns([5, 1])
         with col_in:
-            texto = st.text_input("Mensaje", label_visibility="collapsed", placeholder="Mensaje o pie de foto")
+            texto = st.text_input("Mensaje", label_visibility="collapsed", placeholder="Mensaje")
         with col_btn:
-            enviar = st.form_submit_button("➤", use_container_width=True)
+            enviar = st.form_submit_button("➤", use_container_width=True, help="Enviar")
 
         if enviar:
             if foto is not None:
@@ -426,9 +432,9 @@ def pantalla_chat(usuario, config):
 def barra_navegacion(usuario):
     abrir_bloque_nav()
 
-    opciones = ["💬 Chat"]
+    opciones = ["CHATS"]
     if es_admin(usuario):
-        opciones.append("👥 Personal")
+        opciones.append("PERSONAL")
 
     if "vista" not in st.session_state:
         st.session_state.vista = "chat"
@@ -441,9 +447,9 @@ def barra_navegacion(usuario):
         horizontal=True,
         label_visibility="collapsed",
     )
-    st.session_state.vista = "chat" if elegida.startswith("💬") else "admin"
+    st.session_state.vista = "chat" if elegida == "CHATS" else "admin"
 
-    if st.button("🔓 Cerrar sesión", use_container_width=True, key="cerrar_sesion"):
+    if st.button("Cerrar sesión", use_container_width=True, key="cerrar_sesion"):
         st.session_state.autenticado = False
         st.session_state.usuario = None
         st.session_state.pin_buffer = ""
@@ -470,15 +476,17 @@ def preparar_icono_pwa():
 
 
 def inyectar_pantalla_completa():
-    """PWA + pantalla completa: sin barra de dirección al abrir desde inicio del celular."""
+    """PWA + meta móvil: mejor aspecto al instalar en pantalla de inicio."""
     st.markdown(
         """
         <link rel="manifest" href="/static/manifest.json">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content="3B Official">
         <meta name="theme-color" content="#C8102E">
+        <meta name="format-detection" content="telephone=no">
         """,
         unsafe_allow_html=True,
     )
@@ -520,10 +528,13 @@ def inyectar_pantalla_completa():
                     if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
                 } catch(e) {}
             }
+            function esMovil() {
+                return window.innerWidth <= 480;
+            }
             function actualizarBarra() {
                 const bar = document.getElementById('fs-bar');
                 if (!bar) return;
-                if (esModoApp() || estaFullscreen()) {
+                if (esModoApp() || estaFullscreen() || !esMovil()) {
                     bar.style.display = 'none';
                 } else {
                     bar.style.display = 'block';
@@ -536,13 +547,6 @@ def inyectar_pantalla_completa():
                 try { window.top.document.addEventListener(ev, actualizarBarra); } catch(e) {}
             });
             actualizarBarra();
-            // Primer toque en la app también intenta pantalla completa
-            try {
-                window.top.document.addEventListener('click', function once() {
-                    if (!esModoApp() && !estaFullscreen()) entrarFullscreen();
-                    actualizarBarra();
-                }, { once: true, capture: true });
-            } catch(e) {}
         })();
         </script>
         """,
@@ -592,6 +596,10 @@ for u in config["usuarios"]:
         usuario = u
         break
 
+st.markdown(
+    '<script>document.documentElement.classList.remove("pin-page");</script>',
+    unsafe_allow_html=True,
+)
 render_cabecera_fija(usuario, cargar_logo("40px"))
 barra_navegacion(usuario)
 espaciador_contenido()
