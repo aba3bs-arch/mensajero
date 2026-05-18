@@ -1,39 +1,81 @@
-"""Teclado PIN estilo calculadora / terminal POS."""
+"""Pantalla de acceso — teclado ATM (componente HTML, funciona en móvil)."""
 
-import html as html_lib
+from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
+
+_TECLADO = components.declare_component(
+    "teclado_pin_3b",
+    path=str(Path(__file__).resolve().parent / "teclado_pin"),
+)
+
+PIN_CSS = """
+<style>
+html.pin-page [data-testid="stAppViewContainer"] {
+    background: #b0b0b0 !important;
+}
+html.pin-page .block-container {
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    padding: 12px 10px 20px !important;
+}
+.pin-brand {
+    text-align: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin-bottom: 8px;
+    color: #222;
+}
+.pin-brand h1 {
+    margin: 8px 0 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #C8102E;
+}
+.pin-brand p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #444;
+    font-weight: 600;
+}
+html.pin-page [data-testid="stAlert"] {
+    max-width: 400px;
+    margin: 0 auto 8px !important;
+}
+html.pin-page footer,
+html.pin-page [data-testid="stToolbar"],
+html.pin-page .stAppDeployButton,
+html.pin-page [data-testid="stDecoration"],
+html.pin-page [data-testid="stStatusWidget"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+</style>
+<script>document.documentElement.classList.add('pin-page');</script>
+"""
 
 
 def render_pantalla_pin(config, cargar_logo, buscar_usuario_por_pin):
     pin_longitud = config["pin_longitud"]
     usuarios = config["usuarios"]
 
+    st.markdown(PIN_CSS, unsafe_allow_html=True)
+
     if "pin_buffer" not in st.session_state:
         st.session_state.pin_buffer = ""
     if "pin_error" not in st.session_state:
         st.session_state.pin_error = ""
 
-    logo = cargar_logo("56px")
-    buf = st.session_state.pin_buffer
-    display = html_lib.escape(buf) if buf else "—" * pin_longitud
-    puntos = "".join("●" if i < len(buf) else "○" for i in range(pin_longitud))
-
+    logo = cargar_logo("48px")
     st.markdown(
         f"""
-        <div id="pin-top-fija">
-            <div class="pin-header-rojo">
-                {logo}
-                <h2>3B OFFICIAL</h2>
-                <p>Terminal de acceso — ingresa tu PIN</p>
-            </div>
-            <div class="pin-lcd" style="margin:10px 12px 12px;">
-                <div class="pin-lcd-label">PIN · {pin_longitud} dígitos</div>
-                <div class="pin-lcd-dots">{puntos}</div>
-                <div class="pin-lcd-value">{display}</div>
-            </div>
+        <div class="pin-brand">
+            <div style="display:block">{logo}</div>
+            <h1>3B OFFICIAL</h1>
+            <p>ABARROTES LAS 3B · ACCESO EMPLEADOS</p>
         </div>
-        <div id="espaciador-pin-top"></div>
         """,
         unsafe_allow_html=True,
     )
@@ -41,82 +83,48 @@ def render_pantalla_pin(config, cargar_logo, buscar_usuario_por_pin):
     if st.session_state.pin_error:
         st.error(st.session_state.pin_error)
 
-    def agregar_digit(digito):
-        if len(st.session_state.pin_buffer) < pin_longitud:
-            st.session_state.pin_buffer += digito
-            st.session_state.pin_error = ""
-        if len(st.session_state.pin_buffer) == pin_longitud:
-            intentar_entrar()
-
-    def borrar_digit():
-        st.session_state.pin_buffer = st.session_state.pin_buffer[:-1]
-        st.session_state.pin_error = ""
-
-    def limpiar_pin():
-        st.session_state.pin_buffer = ""
-        st.session_state.pin_error = ""
-
-    def intentar_entrar():
-        if len(st.session_state.pin_buffer) != pin_longitud:
-            st.session_state.pin_error = f"El PIN debe tener {pin_longitud} dígitos."
-            return
-        usuario = buscar_usuario_por_pin(st.session_state.pin_buffer, usuarios)
-        if usuario:
-            st.session_state.autenticado = True
-            st.session_state.usuario = usuario
-            st.session_state.vista = "chat"
-            st.session_state.chat_destino_id = None
-            st.session_state.pin_buffer = ""
-            st.session_state.pin_error = ""
-            st.rerun()
-        st.session_state.pin_error = "PIN incorrecto o usuario inactivo."
-        st.session_state.pin_buffer = ""
-
-    st.markdown(
-        """
-        <style>
-        .pin-lcd {
-            background: linear-gradient(180deg, #0d1f0d 0%, #051005 100%);
-            border: 3px solid #2a3a2a; border-radius: 10px;
-            padding: 14px 16px;
-            box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
-            font-family: Consolas, 'Courier New', monospace;
-        }
-        .pin-lcd-label { color: #5a8f5a; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
-        .pin-lcd-dots {
-            color: #39ff14; font-size: 28px; letter-spacing: 14px; text-align: center;
-            text-shadow: 0 0 10px rgba(57,255,20,0.45); min-height: 40px; line-height: 40px;
-        }
-        .pin-lcd-value { color: #2d5a2d; font-size: 13px; text-align: right; letter-spacing: 3px; margin-top: 4px; }
-        </style>
-        """,
-        unsafe_allow_html=True,
+    resultado = _TECLADO(
+        pin_length=pin_longitud,
+        value=st.session_state.pin_buffer,
+        key="teclado_pin_atm",
+        default="",
+        height=420,
     )
 
-    st.markdown('<div class="pin-teclado-scroll">', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.markdown('<span class="pin-keypad-marker" aria-hidden="true"></span>', unsafe_allow_html=True)
-        for fila in ("123", "456", "789"):
-            c1, c2, c3 = st.columns(3, gap="small")
-            for col, digito in zip((c1, c2, c3), fila):
-                with col:
-                    st.button(
-                        digito,
-                        key=f"pin_n_{digito}_{fila}",
-                        use_container_width=True,
-                        on_click=agregar_digit,
-                        args=(digito,),
-                    )
-
-        c_del, c_zero, c_ok = st.columns(3, gap="small")
-        with c_del:
-            st.markdown('<div class="pin-btn-del">', unsafe_allow_html=True)
-            st.button("BORRAR", key="pin_borrar", use_container_width=True, on_click=borrar_digit)
-            st.markdown("</div>", unsafe_allow_html=True)
-        with c_zero:
-            st.button("0", key="pin_n_0", use_container_width=True, on_click=agregar_digit, args=("0",))
-        with c_ok:
-            st.button("ENTRAR", key="pin_entrar", type="primary", use_container_width=True, on_click=intentar_entrar)
-
-        st.button("C · Limpiar todo", key="pin_limpiar", use_container_width=True, on_click=limpiar_pin)
-    st.markdown("</div>", unsafe_allow_html=True)
+    if resultado is not None and resultado != st.session_state.get("_pin_sync"):
+        st.session_state._pin_sync = resultado
+        if isinstance(resultado, str) and resultado.startswith("__enter__:"):
+            st.session_state.pin_buffer = resultado.split(":", 1)[1]
+            pin = st.session_state.pin_buffer
+            if len(pin) != pin_longitud:
+                st.session_state.pin_error = f"El PIN debe tener {pin_longitud} dígitos."
+            else:
+                usuario = buscar_usuario_por_pin(pin, usuarios)
+                if usuario:
+                    st.session_state.autenticado = True
+                    st.session_state.usuario = usuario
+                    st.session_state.vista = "chat"
+                    st.session_state.chat_destino_id = None
+                    st.session_state.pin_buffer = ""
+                    st.session_state.pin_error = ""
+                    st.rerun()
+                else:
+                    st.session_state.pin_error = "PIN incorrecto o usuario inactivo."
+                    st.session_state.pin_buffer = ""
+        elif isinstance(resultado, str):
+            st.session_state.pin_buffer = resultado
+            st.session_state.pin_error = ""
+            if len(st.session_state.pin_buffer) == pin_longitud:
+                usuario = buscar_usuario_por_pin(st.session_state.pin_buffer, usuarios)
+                if usuario:
+                    st.session_state.autenticado = True
+                    st.session_state.usuario = usuario
+                    st.session_state.vista = "chat"
+                    st.session_state.chat_destino_id = None
+                    st.session_state.pin_buffer = ""
+                    st.session_state.pin_error = ""
+                    st.rerun()
+                else:
+                    st.session_state.pin_error = "PIN incorrecto o usuario inactivo."
+                    st.session_state.pin_buffer = ""
+        st.rerun()
