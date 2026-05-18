@@ -364,11 +364,8 @@ def pantalla_lista_chats(
 ):
     st.markdown(
         """
+        <script>document.documentElement.classList.add('modo-lista-chats');</script>
         <span class="lista-chats-marker" style="display:none" aria-hidden="true"></span>
-        <div class="wa-lista-panel">
-        <div class="lista-chats-titulo">Chats</div>
-        <div class="lista-chats-sub">Chat general o mensajes privados con un compañero.</div>
-        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -377,9 +374,9 @@ def pantalla_lista_chats(
         aviso_configurar_supabase_privado()
 
     if st.button(
-        "Chat general de la tienda\nTodos los empleados · Toca para abrir",
+        "Chat general de la tienda\n📢 Todos los empleados",
         use_container_width=True,
-        type="primary",
+        type="secondary",
         key="abrir_general",
     ):
         st.session_state.chat_destino_id = CHAT_GENERAL_ID
@@ -391,14 +388,17 @@ def pantalla_lista_chats(
     )
 
     if not otros:
-        st.info("No hay más empleados activos para chat privado.")
+        st.markdown(
+            '<p class="wa-aviso-vacio">No hay más empleados activos para chat privado.</p>',
+            unsafe_allow_html=True,
+        )
         return
 
     for u in otros:
         puesto = u.get("puesto", "")
         etiqueta = f"{u['nombre']}"
         if puesto:
-            etiqueta += f"\n{puesto} · privado"
+            etiqueta += f"\n{puesto}"
         else:
             etiqueta += "\nMensaje privado"
         if st.button(etiqueta, key=f"abrir_chat_{u['id']}", use_container_width=True):

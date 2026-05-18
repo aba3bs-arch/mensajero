@@ -396,31 +396,51 @@ def pantalla_chat(usuario, config):
 
 def barra_navegacion(usuario):
     abrir_bloque_nav()
-
-    opciones = ["CHATS"]
-    if es_admin(usuario):
-        opciones.append("PERSONAL")
+    st.markdown(
+        '<span class="wa-nav-marker" style="display:none" aria-hidden="true"></span>',
+        unsafe_allow_html=True,
+    )
 
     if "vista" not in st.session_state:
         st.session_state.vista = "chat"
 
-    idx = 0 if st.session_state.vista == "chat" else 1
-    elegida = st.radio(
-        "Menú",
-        opciones,
-        index=min(idx, len(opciones) - 1),
-        horizontal=True,
-        label_visibility="collapsed",
-    )
-    st.session_state.vista = "chat" if elegida == "CHATS" else "admin"
+    en_chats = st.session_state.vista == "chat"
+    en_admin = st.session_state.vista == "admin"
+    es_adm = es_admin(usuario)
 
-    if st.button("Cerrar sesión", use_container_width=True, key="cerrar_sesion"):
-        st.session_state.autenticado = False
-        st.session_state.usuario = None
-        st.session_state.pin_buffer = ""
-        st.session_state.chat_destino_id = None
-        st.session_state.vista = "chat"
-        st.rerun()
+    if es_adm:
+        c_chats, c_personal, c_salir = st.columns([1, 1, 0.22], gap="small")
+    else:
+        c_chats, c_salir = st.columns([1, 0.22], gap="small")
+        c_personal = None
+
+    with c_chats:
+        if st.button(
+            "CHATS",
+            key="nav_chats",
+            use_container_width=True,
+            type="primary" if en_chats else "secondary",
+        ):
+            st.session_state.vista = "chat"
+            st.rerun()
+    if c_personal is not None:
+        with c_personal:
+            if st.button(
+                "PERSONAL",
+                key="nav_personal",
+                use_container_width=True,
+                type="primary" if en_admin else "secondary",
+            ):
+                st.session_state.vista = "admin"
+                st.rerun()
+    with c_salir:
+        if st.button("⎋", key="cerrar_sesion", use_container_width=True, help="Cerrar sesión"):
+            st.session_state.autenticado = False
+            st.session_state.usuario = None
+            st.session_state.pin_buffer = ""
+            st.session_state.chat_destino_id = None
+            st.session_state.vista = "chat"
+            st.rerun()
 
     cerrar_bloque_nav()
 
@@ -576,7 +596,12 @@ if en_conversacion:
         config, st.session_state.chat_destino_id
     )
     st.markdown(
-        '<script>document.documentElement.classList.add("modo-chat-activo");</script>',
+        """
+        <script>
+        document.documentElement.classList.add('modo-chat-activo');
+        document.documentElement.classList.remove('modo-lista-chats');
+        </script>
+        """,
         unsafe_allow_html=True,
     )
     render_cabecera_fija(
@@ -592,7 +617,14 @@ if en_conversacion:
     espaciador_contenido()
 else:
     st.markdown(
-        '<script>document.documentElement.classList.remove("modo-chat-activo");</script>',
+        """
+        <script>
+        document.documentElement.classList.remove('modo-chat-activo');
+        if (!document.querySelector('.lista-chats-marker')) {
+            document.documentElement.classList.remove('modo-lista-chats');
+        }
+        </script>
+        """,
         unsafe_allow_html=True,
     )
     render_cabecera_fija(usuario, cargar_logo("40px"))

@@ -116,7 +116,8 @@ footer, footer * {
     display: none;
 }
 
-/* ── Pestañas CHATS / PERSONAL (barra roja) ── */
+/* ── Pestañas CHATS / PERSONAL (barra roja, sin radio) ── */
+.wa-nav-fija,
 .nav-superior-fija {
     position: fixed !important;
     left: 50% !important;
@@ -125,81 +126,43 @@ footer, footer * {
     max-width: 440px !important;
     z-index: 1090 !important;
     background: linear-gradient(180deg, #8B0A1E 0%, #7A0918 100%) !important;
-    padding: 0 8px 6px !important;
+    padding: 0 10px 8px !important;
     margin: 0 !important;
     border: none !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.15) !important;
     box-sizing: border-box !important;
-    border-radius: 0 !important;
 }
-.nav-superior-fija div[data-testid="stRadio"] > div {
-    display: flex !important;
-    justify-content: stretch !important;
-    gap: 0 !important;
-    background: transparent !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+.wa-nav-fija [data-testid="column"],
+.nav-superior-fija [data-testid="column"] {
+    padding: 0 4px !important;
 }
-.nav-superior-fija div[data-testid="stRadio"] label {
-    flex: 1 !important;
+.wa-nav-fija .stButton > button,
+.nav-superior-fija .stButton > button {
+    min-height: 38px !important;
     border-radius: 0 !important;
-    width: auto !important;
-    height: 40px !important;
-    min-height: 40px !important;
-    min-width: 0 !important;
-    padding: 0 8px !important;
-    margin: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    border: none !important;
+    border-bottom: 3px solid transparent !important;
+    box-shadow: none !important;
     font-size: 12px !important;
     font-weight: 700 !important;
     letter-spacing: 0.08em !important;
-    color: rgba(255,255,255,0.65) !important;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 3px solid transparent !important;
     text-transform: uppercase !important;
-    transition: all 0.15s ease !important;
-}
-.nav-superior-fija div[data-testid="stRadio"] label[data-checked="true"],
-.nav-superior-fija div[data-testid="stRadio"] label:has(input:checked) {
     background: transparent !important;
+    color: rgba(255,255,255,0.55) !important;
+}
+.wa-nav-fija .stButton > button[kind="primary"],
+.nav-superior-fija .stButton > button[kind="primary"] {
     color: #fff !important;
     border-bottom-color: #F5D000 !important;
-    box-shadow: none !important;
+    background: transparent !important;
 }
-.nav-superior-fija div[data-testid="stRadio"] label > div:first-child {
-    display: none !important;
-}
-
-.btn-logout-fija {
-    position: fixed !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 100% !important;
-    max-width: 440px !important;
-    z-index: 1089 !important;
-    background: rgba(139, 10, 30, 0.95) !important;
-    padding: 4px 12px 8px !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-}
-.btn-logout-fija .stButton > button {
-    width: 100% !important;
-    background: rgba(255,255,255,0.12) !important;
-    color: rgba(255,255,255,0.9) !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
-    min-height: 36px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-}
-.btn-logout-fija .stButton > button:hover {
-    border-color: #F5D000 !important;
-    color: #fff !important;
-    background: rgba(255,255,255,0.2) !important;
+.wa-nav-fija .st-key-cerrar_sesion .stButton > button,
+.nav-superior-fija .st-key-cerrar_sesion .stButton > button {
+    font-size: 18px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    color: rgba(255,255,255,0.85) !important;
+    border-bottom: none !important;
 }
 
 #espaciador-top-fijo { width: 100%; display: block; }
@@ -312,31 +275,22 @@ body:has(.cabecera-3b) .stButton > button[kind="primary"]:hover {
     box-shadow: 0 6px 18px rgba(200,16,46,0.4) !important;
 }
 
-/* ── Lista de conversaciones ── */
-.lista-chats-titulo {
-    font-size: 14px;
-    font-weight: 700;
-    color: #8B0A1E;
+/* ── Lista de conversaciones (estilo WhatsApp) ── */
+html.modo-lista-chats [data-testid="stAppViewContainer"] {
+    background: #e5ddd5 !important;
+}
+html.modo-lista-chats .block-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.wa-aviso-vacio {
     margin: 0;
-    padding: 12px 14px 4px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-.lista-chats-sub {
-    font-size: 12px;
-    color: #666;
-    margin: 0;
-    padding: 0 14px 10px;
-    line-height: 1.4;
-    border-bottom: 1px solid #eee;
-}
-div[data-testid="stVerticalBlock"]:has(.lista-chats-marker) h3 {
-    display: none !important;
-}
-div[data-testid="stVerticalBlock"]:has(.lista-chats-marker) .stButton > button[kind="primary"],
-div[data-testid="stVerticalBlock"]:has(.lista-chats-marker) ~ div .stButton > button {
-    text-align: left !important;
-    padding-left: 16px !important;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: #667781;
+    background: #f0f2f5;
+    border-top: 1px solid #e9edef;
+    text-align: center;
 }
 div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button {
     text-align: left !important;
@@ -372,8 +326,18 @@ div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > butto
     font-weight: 900;
     color: #111;
 }
-div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button[kind="primary"] {
-    background: #fff8e8 !important;
+div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button[kind="primary"],
+div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .stButton > button[kind="secondary"] {
+    background: #fff !important;
+    color: #111 !important;
+}
+div:has(.lista-chats-marker) ~ [data-testid="stVerticalBlock"] .st-key-abrir_general .stButton > button::after {
+    content: 'Último: canal abierto para toda la tienda';
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: #667781;
+    margin-top: 4px;
 }
 
 /* ── Formulario envío chat ── */
@@ -645,41 +609,18 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.pin-keypad-marker) .stButto
             ajustarIframeChat();
             return;
         }
-        var radio = null;
-        var radios = document.querySelectorAll('[data-testid="stRadio"]');
-        for (var i = 0; i < radios.length; i++) {
-            if (cab.compareDocumentPosition(radios[i]) & Node.DOCUMENT_POSITION_FOLLOWING) {
-                radio = radios[i];
-                break;
-            }
-        }
-
+        var navMarker = document.querySelector('.wa-nav-marker');
         var navH = 0;
-        if (radio) {
-            var navWrap = radio.closest('[data-testid="stVerticalBlock"]') || radio.parentElement;
+        if (navMarker) {
+            var navWrap = navMarker.closest('[data-testid="stVerticalBlock"]') || navMarker.parentElement;
             if (navWrap) {
-                navWrap.classList.add('nav-superior-fija');
-                navWrap.style.top = (cabH + 8) + 'px';
+                navWrap.classList.add('wa-nav-fija');
+                navWrap.style.top = cabH + 'px';
                 navH = altura(navWrap);
             }
         }
 
-        var logH = 0;
-        var btns = document.querySelectorAll('.stButton > button');
-        for (var j = 0; j < btns.length; j++) {
-            var t = (btns[j].textContent || '').trim();
-            if (t.indexOf('Cerrar') >= 0 || t.indexOf('sesión') >= 0) {
-                var logWrap = btns[j].closest('[data-testid="stVerticalBlock"]') || btns[j].parentElement;
-                if (logWrap && cab.compareDocumentPosition(logWrap) & Node.DOCUMENT_POSITION_FOLLOWING) {
-                    logWrap.classList.add('btn-logout-fija');
-                    logWrap.style.top = (cabH + navH + 12) + 'px';
-                    logH = altura(logWrap);
-                    break;
-                }
-            }
-        }
-
-        esp.style.height = (cabH + navH + logH + 14) + 'px';
+        esp.style.height = (cabH + navH + 8) + 'px';
     }
 
     function ocultarMarcaStreamlit() {
